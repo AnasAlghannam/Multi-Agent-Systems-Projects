@@ -1,0 +1,25 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Runtime artifacts
+chroma_db/
+document_cache/
+*.log
+
+# Model / build caches
+.cache/
+
+# Tooling / OS
+.claude/settings.local.json
+.vscode/
+.idea/
+.DS_Store

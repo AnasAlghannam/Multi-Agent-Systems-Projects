@@ -1,0 +1,29 @@
+# Direct dependencies only; transitive packages resolve automatically.
+# For the exact versions this project was built against, use requirements-lock.txt.
+
+# Web UI
+gradio>=5.0
+
+# Agent orchestration
+langgraph>=0.3
+langchain>=0.3
+langchain-community>=0.3
+langchain-classic>=1.0
+langchain-groq>=0.2
+langchain-text-splitters>=0.3
+
+# Retrieval
+langchain-chroma>=0.2
+langchain-huggingface>=0.1
+sentence-transformers>=3.0
+rank-bm25>=0.2
+
+# Document parsing (PDF / DOCX / MD / TXT)
+docling>=2.15
+
+# Logging
+loguru>=0.7
+
+# Config
+pydantic-settings>=2.0
+python-dotenv>=1.0
