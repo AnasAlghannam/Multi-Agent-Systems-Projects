@@ -26,6 +26,26 @@ reports what it could not support. Failed verification loops back for another pa
 
 ---
 
+### 2. [WorkflowPatternsLangGraph](WorkflowPatternsLangGraph/) — Coordination Patterns
+
+The three ways to wire LLM calls together, each built end to end: **chaining** (sequential steps),
+**routing** (a classifier picks the branch), and **parallelization** (independent steps run at once,
+then merge). Closes with a multi-agent router dispatching to four specialized handlers.
+
+**Stack:** LangGraph · Gradio · Groq
+
+---
+
+### 3. [OrchestrationEvaluationLangGraph](OrchestrationEvaluationLangGraph/) — Orchestration & Reflection
+
+Two heavier patterns. **Orchestrator–Worker** plans a variable number of subtasks and fans them out
+to parallel workers with `Send`, then merges the results. **Reflection** puts a generator and an
+evaluator in a loop, revising until the output meets its target or an iteration cap trips.
+
+**Stack:** LangGraph · Gradio · Groq
+
+---
+
 ## Conventions
 
 Every project in this repo follows the same rules:
