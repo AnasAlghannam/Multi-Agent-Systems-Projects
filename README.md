@@ -46,6 +46,17 @@ evaluator in a loop, revising until the output meets its target or an iteration 
 
 ---
 
+### 4. [NourishBot](NourishBot/) — Multi-Agent Nutrition Assistant
+
+Four agents turn a set of ingredients into recipe ideas or a full nutritional analysis: one detects
+ingredients (from an image where a vision model is available, otherwise a typed list), one applies
+dietary restrictions, one estimates calories and nutrients, and one suggests recipes or evaluates
+healthiness. Output is Pydantic-typed and rendered as tables in a Gradio UI.
+
+**Stack:** CrewAI (`@CrewBase` + YAML config) · Gradio · Groq
+
+---
+
 ## Conventions
 
 Every project in this repo follows the same rules:
