@@ -1,0 +1,11 @@
+# AG2 (AutoGen). Pinned below 1.0: that release renamed the module to `ag2`
+# and replaced ConversableAgent/GroupChat with a different API.
+ag2[openai]<1.0
+
+# Config
+python-dotenv>=1.0
+pydantic>=2.0
+
+# Notebook
+jupyter
+ipykernel

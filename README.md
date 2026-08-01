@@ -69,6 +69,36 @@ meteorologist and a language expert through `HandoffTool`.
 
 ---
 
+### 6. [AG2AutoGenBasics](AG2AutoGenBasics/) — AG2 (AutoGen) Tutorial
+
+A tour of AG2, the community fork of Microsoft's AutoGen: conversable agents, specialized roles,
+human-in-the-loop review, `GroupChat` orchestration, tool registration, and typed outputs.
+
+**Stack:** AG2 (AutoGen) · Groq
+
+---
+
+### 7. [AG2HealthcareChatbot](AG2HealthcareChatbot/) — Multi-Agent Consultation
+
+A consultation assistant built as a group of narrow agents rather than one model — patient,
+diagnosis and further specialists, coordinated by a `GroupChatManager` that picks the next speaker.
+A second crew applies the same structure to emotional wellbeing. Demonstration only, not medical
+advice.
+
+**Stack:** AG2 (AutoGen) · Groq
+
+---
+
+### 8. [MCPServerAgents](MCPServerAgents/) — Model Context Protocol
+
+Using tools that live in a separate process. Covers the stdio and HTTP transports, listing a
+server's tools and reading their schemas, then wiring two public MCP servers into one LangGraph
+ReAct agent.
+
+**Stack:** FastMCP · LangGraph · Groq
+
+---
+
 ## Conventions
 
 Every project in this repo follows the same rules:

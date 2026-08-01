@@ -1,0 +1,14 @@
+# MCP client
+fastmcp>=2.0
+
+# Agent + MCP adapters (for multi_server_agent.py)
+langchain-mcp-adapters>=0.1
+langgraph>=0.3
+langchain-groq>=0.2
+
+# Config
+python-dotenv>=1.0
+
+# Notebook
+jupyter
+ipykernel
