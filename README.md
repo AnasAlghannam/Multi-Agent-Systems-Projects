@@ -57,6 +57,18 @@ healthiness. Output is Pydantic-typed and rendered as tables in a Gradio UI.
 
 ---
 
+### 5. [BeeAIRequirementAgents](BeeAIRequirementAgents/) — Declaratively Constrained Agents
+
+Eleven examples on the [BeeAI framework](https://github.com/i-am-bee/beeai-framework), from a single
+chat call up to a four-agent travel planner. Its `RequirementAgent` constrains tool use
+**declaratively** — think first, never search twice in a row, ask before handing off — so the rules
+are enforced rather than merely prompted for. The capstone coordinates a destination expert, a
+meteorologist and a language expert through `HandoffTool`.
+
+**Stack:** BeeAI framework · Groq
+
+---
+
 ## Conventions
 
 Every project in this repo follows the same rules:

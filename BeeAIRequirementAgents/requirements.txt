@@ -1,0 +1,6 @@
+# IBM's open-source agent framework
+beeai-framework[wikipedia]>=0.1.30
+
+# Config
+python-dotenv>=1.0
+pydantic>=2.0
