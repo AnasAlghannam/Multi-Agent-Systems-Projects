@@ -18,19 +18,44 @@ from pydantic import BaseModel, Field
 
 load_dotenv(find_dotenv(usecwd=True))
 
-from langchain_groq import ChatGroq
+from langchain_openai import ChatOpenAI
 
 MODEL = os.environ.get("WORKFLOW_MODEL", "llama-3.3-70b-versatile")
 
 
-def get_llm(temperature: float = 0.7) -> ChatGroq:
-    """Return the chat model, failing with a clear message if the key is missing."""
-    if not os.environ.get("GROQ_API_KEY"):
-        raise RuntimeError(
-            "GROQ_API_KEY is not set. Copy .env.example to .env and add your key "
-            "(free at https://console.groq.com/keys)."
+def _resolve_provider():
+    """Return (api_key, base_url, model) for whichever provider is configured.
+
+    Groq and OpenRouter both speak the OpenAI protocol, so switching providers
+    is just a base URL, key and model id. OpenRouter wins when its key is set -
+    handy when Groq's quota runs out or you need a model it does not host.
+    """
+    if os.environ.get("OPENROUTER_API_KEY"):
+        return (
+            os.environ["OPENROUTER_API_KEY"],
+            "https://openrouter.ai/api/v1",
+            os.environ.get("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct"),
         )
-    return ChatGroq(model=MODEL, temperature=temperature)
+    if os.environ.get("GROQ_API_KEY"):
+        return (
+            os.environ["GROQ_API_KEY"],
+            "https://api.groq.com/openai/v1",
+            MODEL,
+        )
+    raise RuntimeError(
+        "No model provider configured. Set GROQ_API_KEY or OPENROUTER_API_KEY "
+        "in your .env file."
+    )
+
+
+def get_llm(temperature: float = 0.7) -> ChatOpenAI:
+    """Return the chat model for whichever provider is configured."""
+    api_key, base_url, model = _resolve_provider()
+    return ChatOpenAI(
+        model=model,
+        api_key=api_key,
+        base_url=base_url,
+        temperature=temperature)
 
 
 # --------------------------------------------------------------------------

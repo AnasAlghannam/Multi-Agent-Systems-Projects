@@ -9,7 +9,7 @@ langgraph>=0.3
 langchain>=0.3
 langchain-community>=0.3
 langchain-classic>=1.0
-langchain-groq>=0.2
+langchain-openai>=0.2      # Groq and OpenRouter are both OpenAI-compatible
 langchain-text-splitters>=0.3
 
 # Retrieval

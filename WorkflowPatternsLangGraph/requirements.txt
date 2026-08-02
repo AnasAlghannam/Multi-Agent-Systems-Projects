@@ -1,6 +1,6 @@
 # Workflow orchestration
 langgraph>=0.3
-langchain-groq>=0.2
+langchain-openai>=0.2      # Groq and OpenRouter are both OpenAI-compatible
 
 # UI
 gradio>=5.0
