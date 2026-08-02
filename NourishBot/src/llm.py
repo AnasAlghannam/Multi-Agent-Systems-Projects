@@ -17,11 +17,22 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv(usecwd=True))
 
-from groq import Groq
+from openai import OpenAI
 
 TEXT_MODEL = os.environ.get("NOURISH_TEXT_MODEL", "llama-3.3-70b-versatile")
-# Vision-capable Groq models (for example llama-4-scout) are not on every
-# account. Set NOURISH_VISION_MODEL if yours has one.
+
+# Groq and OpenRouter both speak the OpenAI protocol. OpenRouter wins when its
+# key is set - it fronts models Groq does not host, vision models among them.
+if os.environ.get("OPENROUTER_API_KEY"):
+    API_KEY = os.environ["OPENROUTER_API_KEY"]
+    BASE_URL = "https://openrouter.ai/api/v1"
+    TEXT_MODEL = os.environ.get("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct")
+else:
+    API_KEY = os.environ.get("GROQ_API_KEY", "")
+    BASE_URL = "https://api.groq.com/openai/v1"
+
+# A vision-capable model id, if your provider offers one. Groq hosts none,
+# so this generally means an OpenRouter model such as meta-llama/llama-4-scout.
 VISION_MODEL = os.environ.get("NOURISH_VISION_MODEL", "")
 
 
@@ -29,14 +40,13 @@ class VisionUnavailable(RuntimeError):
     """Raised when no vision model is configured or the call is rejected."""
 
 
-def _client() -> Groq:
-    key = os.environ.get("GROQ_API_KEY")
-    if not key:
+def _client() -> OpenAI:
+    if not API_KEY:
         raise RuntimeError(
-            "GROQ_API_KEY is not set. Copy .env.example to .env and add your key "
-            "(free at https://console.groq.com/keys)."
+            "No model provider configured. Set GROQ_API_KEY or OPENROUTER_API_KEY "
+            "in your .env file."
         )
-    return Groq(api_key=key)
+    return OpenAI(api_key=API_KEY, base_url=BASE_URL)
 
 
 def chat(prompt: str, max_tokens: int = 500, temperature: float = 0.2) -> str:

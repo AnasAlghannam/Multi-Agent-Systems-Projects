@@ -3,7 +3,7 @@ crewai>=0.75
 crewai-tools>=0.17
 
 # Model access
-groq>=0.11
+openai>=1.50
 python-dotenv>=1.0
 
 # UI
