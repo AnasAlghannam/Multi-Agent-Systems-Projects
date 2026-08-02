@@ -17,7 +17,15 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv(usecwd=True))
 
-from openai import OpenAI
+# The Langfuse wrapper is a drop-in for the OpenAI client and traces every
+# call when credentials are set; it falls back to the plain client otherwise.
+if os.environ.get("LANGFUSE_PUBLIC_KEY"):
+    try:
+        from langfuse.openai import OpenAI
+    except Exception:
+        from openai import OpenAI
+else:
+    from openai import OpenAI
 
 TEXT_MODEL = os.environ.get("NOURISH_TEXT_MODEL", "llama-3.3-70b-versatile")
 

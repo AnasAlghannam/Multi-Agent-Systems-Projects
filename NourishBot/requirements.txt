@@ -15,3 +15,6 @@ pydantic>=2.0
 pillow
 requests
 pyyaml
+
+# Tracing (optional)
+langfuse>=3.0

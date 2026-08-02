@@ -27,3 +27,6 @@ loguru>=0.7
 # Config
 pydantic-settings>=2.0
 python-dotenv>=1.0
+
+# Tracing (optional)
+langfuse>=3.0

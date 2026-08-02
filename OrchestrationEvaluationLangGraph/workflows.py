@@ -48,6 +48,27 @@ def _resolve_provider():
     )
 
 
+# ---------------------------------------------------------------------------
+# Tracing (optional)
+# ---------------------------------------------------------------------------
+# When Langfuse credentials are present, every model call and graph step is
+# traced. Without them the callback list is empty and nothing changes.
+def get_callbacks() -> list:
+    """Return Langfuse callbacks if configured, otherwise an empty list."""
+    if not os.environ.get("LANGFUSE_PUBLIC_KEY"):
+        return []
+    try:
+        from langfuse.langchain import CallbackHandler
+        return [CallbackHandler()]
+    except Exception as e:
+        # Say why rather than disabling tracing silently - a quiet failure here
+        # is exactly the kind of thing tracing is meant to prevent.
+        print(f"[tracing] Langfuse disabled: {e}")
+        return []
+
+
+TRACING_CONFIG = {"callbacks": get_callbacks()}
+
 def get_llm(temperature: float = 0.7) -> ChatOpenAI:
     """Return the chat model for whichever provider is configured."""
     api_key, base_url, model = _resolve_provider()
@@ -55,7 +76,11 @@ def get_llm(temperature: float = 0.7) -> ChatOpenAI:
         model=model,
         api_key=api_key,
         base_url=base_url,
-        temperature=temperature)
+        temperature=temperature,
+        callbacks=get_callbacks(),
+    )
+
+
 
 
 # --------------------------------------------------------------------------

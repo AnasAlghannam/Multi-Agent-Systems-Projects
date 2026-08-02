@@ -134,6 +134,20 @@ Set `OPENROUTER_MODEL` to pick the model, e.g. `meta-llama/llama-3.3-70b-instruc
 central config module switch automatically; the rest name their model inline and take a one-line
 edit.
 
+### Tracing
+
+Multi-agent runs are hard to debug from stdout — which agent ran, what it was sent, why it looped.
+Setting Langfuse credentials in `.env` traces every model call and graph step to a dashboard:
+
+```
+LANGFUSE_PUBLIC_KEY=pk-lf-...
+LANGFUSE_SECRET_KEY=sk-lf-...
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
+```
+
+Free tier at [cloud.langfuse.com](https://cloud.langfuse.com). Leave the keys blank and the projects
+run exactly as before — tracing is additive, never required.
+
 ## Conventions
 
 Every project in this repo follows the same rules:
