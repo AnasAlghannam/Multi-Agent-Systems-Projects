@@ -89,15 +89,9 @@ advice.
 
 ---
 
-### 8. [MCPServerAgents](MCPServerAgents/) — Model Context Protocol
 
-Using tools that live in a separate process. Covers the stdio and HTTP transports, listing a
-server's tools and reading their schemas, then wiring two public MCP servers into one LangGraph
-ReAct agent.
-
-**Stack:** FastMCP · LangGraph · Groq
-
----
+> **MCP projects** live in a separate repo:
+> [Model-Context-Protocol-Projects](https://github.com/AnasAlghannam/Model-Context-Protocol-Projects).
 
 ## Conventions
 
