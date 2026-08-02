@@ -90,6 +90,33 @@ advice.
 ---
 
 
+### 8. [SpecializedAgentDesign](SpecializedAgentDesign/) — One Job Per Agent
+
+Building agents that each own a narrow remit rather than one agent that tries to do everything:
+role design, giving an agent only the tools its job needs, and boundaries on what it should attempt.
+
+**Stack:** LangChain · Groq
+
+---
+
+### 9. [MultiAgentSystemImplementation](MultiAgentSystemImplementation/) — Composing Them
+
+Wiring specialized agents into a working system: routing work between them, sharing state, and
+deciding when the group is finished.
+
+**Stack:** LangChain · Groq
+
+---
+
+### 10. [AgentChatbotInterface](AgentChatbotInterface/) — A Conversational Front End
+
+Putting chat in front of a multi-agent system: intent classification routes each message to the
+right agent, preferences are extracted from free text, and conversation state persists across turns.
+
+**Stack:** LangChain · Gradio · Groq
+
+---
+
 > **MCP projects** live in a separate repo:
 > [Model-Context-Protocol-Projects](https://github.com/AnasAlghannam/Model-Context-Protocol-Projects).
 
