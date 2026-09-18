@@ -6,6 +6,11 @@
 A CrewAI application that turns a set of ingredients into either **recipe ideas** or a **nutritional
 analysis**, using four specialized agents that hand work to one another.
 
+[![Watch the 23-second walkthrough: the four agents read a fridge photo, drop everything that is not vegan, and return recipes](brag-output/brag.jpg)](https://github.com/AnasAlghannam/Multi-Agent-Systems-Projects/blob/main/NourishBot/brag-output/brag.mp4)
+
+*23 seconds, sound on. Every recipe and number in it is real output from the crews, run on the
+example photos in `examples/`.*
+
 | Agent | Responsibility |
 |-------|----------------|
 | Ingredient detection | Identifies ingredients (from an image, or from a typed list) |

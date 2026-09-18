@@ -55,6 +55,8 @@ healthiness. Output is Pydantic-typed and rendered as tables in a Gradio UI.
 
 **Stack:** CrewAI (`@CrewBase` + YAML config) · Gradio · Groq
 
+[Watch the 23-second walkthrough →](NourishBot/brag-output/brag.mp4)
+
 ---
 
 ### 5. [BeeAIRequirementAgents](BeeAIRequirementAgents/) — Declaratively Constrained Agents
