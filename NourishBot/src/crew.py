@@ -10,24 +10,21 @@ from src.tools import (
     NutrientAnalysisTool
 )
 from src.models import RecipeSuggestionOutput, NutrientAnalysisOutput
-from src.llm import TEXT_MODEL
+from src.llm import TEXT_MODEL, API_KEY, BASE_URL
 
 from crewai import LLM
-from dotenv import load_dotenv, find_dotenv
 
-load_dotenv(find_dotenv(usecwd=True))
-
-if not os.environ.get("GROQ_API_KEY"):
+if not API_KEY:
     raise RuntimeError(
-        "GROQ_API_KEY is not set. Copy .env.example to .env and add your key "
-        "(free at https://console.groq.com/keys)."
+        "No model provider configured. Set GROQ_API_KEY or OPENROUTER_API_KEY "
+        "in your .env file."
     )
 
-# Groq through its OpenAI-compatible endpoint, shared by every agent.
+# Same provider src/llm.py resolved, shared by every agent.
 GROQ_LLM = LLM(
     model=f"openai/{TEXT_MODEL}",
-    base_url="https://api.groq.com/openai/v1",
-    api_key=os.environ["GROQ_API_KEY"],
+    base_url=BASE_URL,
+    api_key=API_KEY,
 )
 
 
