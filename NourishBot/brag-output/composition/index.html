@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #FFF8EC; }
+      #root {
+        position: relative; width: 100%; height: 100%; overflow: hidden;
+        font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #2B2118; background: #FFF8EC;
+      }
+      .clip { position: absolute; inset: 0; }
+      .scene { display: flex; align-items: center; justify-content: center; }
+
+      /* shared bits */
+      .agent-tag {
+        position: absolute; top: 96px; left: 120px;
+        font-size: 30px; font-weight: 700; letter-spacing: 0.02em;
+        background: #2B2118; color: #FFF8EC; padding: 14px 28px; border-radius: 999px;
+      }
+      .agent-tag b { color: #EBA93F; }
+      .photo {
+        border-radius: 36px; overflow: hidden;
+        box-shadow: 0 30px 80px rgba(43, 33, 24, 0.25);
+      }
+      .photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+      /* 1 hook */
+      #s1 .photo { position: absolute; inset: 0; border-radius: 0; box-shadow: none; }
+      #s1 .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(43,33,24,0.82) 0%, rgba(43,33,24,0.35) 70%, rgba(43,33,24,0.15) 100%); }
+      #s1 .lines { position: absolute; left: 140px; top: 330px; color: #FFF8EC; }
+      #s1 .l1 { font-size: 120px; font-weight: 700; letter-spacing: -0.03em; }
+      #s1 .l2 { font-size: 150px; font-weight: 800; letter-spacing: -0.04em; color: #FFD700; margin-top: 10px; }
+
+      /* 2 vision */
+      #s2 .photo { position: absolute; left: 120px; top: 200px; width: 900px; height: 662px; }
+      #s2 .chips { position: absolute; left: 1100px; top: 210px; width: 700px; display: flex; flex-wrap: wrap; gap: 22px; }
+      .chip {
+        font-size: 46px; font-weight: 700; padding: 18px 34px; border-radius: 999px;
+        background: #FFFFFF; border: 4px solid #EBA93F; box-shadow: 0 10px 24px rgba(43,33,24,0.12);
+      }
+      #s2 .caption { position: absolute; left: 1100px; top: 780px; font-size: 38px; font-weight: 600; color: #7A6552; }
+
+      /* 3 nutritionist */
+      #s3 .field { position: absolute; left: 120px; top: 230px; width: 760px; }
+      #s3 .field label { display: block; font-size: 34px; font-weight: 600; color: #7A6552; margin-bottom: 18px; }
+      #s3 .box {
+        height: 130px; border-radius: 22px; border: 4px solid #EBA93F; background: #FFFFFF;
+        font-size: 72px; font-weight: 700; padding: 0 36px; display: flex; align-items: center;
+      }
+      #s3 .cursor { display: inline-block; width: 6px; height: 72px; background: #2B2118; margin-left: 6px; }
+      #s3 .list { position: absolute; left: 1020px; top: 200px; width: 780px; display: flex; flex-wrap: wrap; gap: 22px; }
+      #s3 .chip.out { position: relative; }
+      #s3 .strike { position: absolute; left: 20px; right: 20px; top: 50%; height: 7px; background: #C8452F; transform-origin: left center; transform: scaleX(0); }
+      #s3 .sorry { position: absolute; left: 120px; top: 560px; font-size: 128px; font-weight: 800; letter-spacing: -0.03em; }
+      #s3 .sorry span { color: #C8452F; }
+
+      /* 4 recipes */
+      #s4 .mode { position: absolute; top: 104px; right: 120px; font-size: 32px; font-weight: 600; color: #7A6552; }
+      #s4 .mode b { color: #2B2118; background: #FFD700; padding: 6px 18px; border-radius: 12px; }
+      #s4 .cards { position: absolute; left: 120px; right: 120px; top: 270px; display: flex; gap: 48px; }
+      .card {
+        flex: 1; height: 600px; background: #FFFFFF; border-radius: 32px; padding: 48px 44px;
+        box-shadow: 0 24px 60px rgba(43,33,24,0.16); border-top: 14px solid #EBA93F;
+        display: flex; flex-direction: column;
+      }
+      .card h3 { font-size: 52px; line-height: 1.12; font-weight: 800; letter-spacing: -0.02em; }
+      .card .ing { margin-top: 26px; font-size: 32px; line-height: 1.45; color: #7A6552; flex: 1; }
+      .card .kcal { font-size: 88px; font-weight: 800; letter-spacing: -0.03em; }
+      .card .kcal small { font-size: 38px; font-weight: 700; color: #9A6B1E; margin-left: 10px; }
+
+      /* 5 analysis */
+      #s5 .photo { position: absolute; left: 120px; top: 190px; width: 760px; height: 690px; }
+      #s5 .panel { position: absolute; left: 980px; top: 200px; width: 820px; }
+      #s5 .mode { font-size: 32px; font-weight: 600; color: #7A6552; }
+      #s5 .mode b { color: #2B2118; background: #FFD700; padding: 6px 18px; border-radius: 12px; }
+      #s5 .dish { margin-top: 34px; font-size: 44px; font-weight: 700; }
+      #s5 .big { font-size: 190px; font-weight: 800; letter-spacing: -0.05em; line-height: 1.15; margin-top: 24px; }
+      #s5 .big small { font-size: 64px; color: #9A6B1E; letter-spacing: 0; margin-left: 12px; }
+      #s5 .macros { display: flex; gap: 18px; margin-top: 30px; }
+      #s5 .macros div { font-size: 34px; font-weight: 700; background: #FFFFFF; border-radius: 16px; padding: 14px 24px; box-shadow: 0 8px 20px rgba(43,33,24,0.1); }
+      #s5 .verdict { margin-top: 44px; font-size: 44px; font-weight: 600; color: #7A6552; }
+      #s5 .verdict b { color: #2B2118; }
+
+      /* 6 outro */
+      #s6 { background: #2B2118; }
+      #s6 .wrap { text-align: center; color: #FFF8EC; }
+      #s6 .mark { font-size: 200px; font-weight: 800; letter-spacing: -0.05em; }
+      #s6 .mark span { color: #EBA93F; }
+      #s6 .tag { font-size: 58px; font-weight: 600; margin-top: 18px; }
+      #s6 .stack { font-size: 34px; font-weight: 600; color: #EBA93F; margin-top: 46px; letter-spacing: 0.08em; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="23" data-width="1920" data-height="1080">
+
+      <!-- 1. Hook -->
+      <div id="s1" class="clip scene" data-start="0" data-duration="3.2" data-track-index="0">
+        <div class="photo" data-layout-allow-overflow><img id="s1img" src="assets/img/food-1.jpg" alt="" /></div>
+        <div class="shade"></div>
+        <div class="lines">
+          <div class="l1">Your fridge.</div>
+          <div class="l2">Four AI agents.</div>
+        </div>
+      </div>
+
+      <!-- 2. Vision -->
+      <div id="s2" class="clip" data-start="3.2" data-duration="4.4" data-track-index="0">
+        <div class="agent-tag">Agent 1 · <b>Vision AI Specialist</b></div>
+        <div class="photo"><img src="assets/img/food-1.jpg" alt="" /></div>
+        <div class="chips">
+          <div class="chip">eggs</div><div class="chip">milk</div><div class="chip">blueberries</div>
+          <div class="chip">grapes</div><div class="chip">oranges</div><div class="chip">pears</div>
+          <div class="chip">ham</div>
+        </div>
+        <div class="caption">Reads the ingredients straight from the photo.</div>
+      </div>
+
+      <!-- 3. Nutritionist -->
+      <div id="s3" class="clip" data-start="7.6" data-duration="4.2" data-track-index="0">
+        <div class="agent-tag">Agent 2 · <b>Nutritionist AI Specialist</b></div>
+        <div class="field">
+          <label>Dietary Restrictions</label>
+          <div class="box"><span class="t">v</span><span class="t">e</span><span class="t">g</span><span class="t">a</span><span class="t">n</span><i class="cursor"></i></div>
+        </div>
+        <div class="list">
+          <div class="chip out">eggs<i class="strike"></i></div>
+          <div class="chip out">milk<i class="strike"></i></div>
+          <div class="chip">blueberries</div><div class="chip">grapes</div>
+          <div class="chip">oranges</div><div class="chip">pears</div>
+          <div class="chip out">ham<i class="strike"></i></div>
+        </div>
+        <div class="sorry">Sorry, <span>ham.</span></div>
+      </div>
+
+      <!-- 4. Recipes -->
+      <div id="s4" class="clip" data-start="11.8" data-duration="4.4" data-track-index="0">
+        <div class="agent-tag">Agents 3 &amp; 4 · <b>Recipe Generation</b></div>
+        <div class="mode">Workflow Type: <b>recipe</b></div>
+        <div class="cards">
+          <div class="card"><h3>Vegan Fruit Salad</h3><div class="ing">blueberries · grapes · oranges · pears</div><div class="kcal"><span class="n" data-to="120">0</span><small>kcal</small></div></div>
+          <div class="card"><h3>Roasted Pears with Olive Oil</h3><div class="ing">pears · olive oil</div><div class="kcal"><span class="n" data-to="150">0</span><small>kcal</small></div></div>
+          <div class="card"><h3>Blueberry and Grape Smoothie</h3><div class="ing">blueberries · grapes · oranges</div><div class="kcal"><span class="n" data-to="100">0</span><small>kcal</small></div></div>
+        </div>
+      </div>
+
+      <!-- 5. Analysis -->
+      <div id="s5" class="clip" data-start="16.2" data-duration="3.6" data-track-index="0">
+        <div class="agent-tag">Nutrition Analysis Specialist</div>
+        <div class="photo"><img src="assets/img/food-2.jpg" alt="" /></div>
+        <div class="panel">
+          <div class="mode">Workflow Type: <b>analysis</b></div>
+          <div class="dish">4 corn dogs</div>
+          <div class="big"><span id="cal">0</span><small>kcal</small></div>
+          <div class="macros"><div>22g protein</div><div>140g carbs</div><div>50g fat</div></div>
+          <div class="verdict">Verdict: <b>an occasional treat.</b></div>
+        </div>
+      </div>
+
+      <!-- 6. Outro -->
+      <div id="s6" class="clip scene" data-start="19.8" data-duration="3.2" data-track-index="0">
+        <div class="wrap">
+          <div class="mark">Nourish<span>Bot</span></div>
+          <div class="tag">Snap your fridge. Four agents do the rest.</div>
+          <div class="stack">CREWAI · GRADIO · 4 AGENTS</div>
+        </div>
+      </div>
+
+      <!-- Audio -->
+      <audio id="bed" data-start="0" data-duration="23" data-track-index="1" data-volume="0.5" src="assets/music/bed.mp3"></audio>
+      <audio id="sfx-hook" data-start="1.6" data-duration="0.18" data-track-index="2" data-volume="0.8" src="assets/sfx/impact/impactSoft_medium_001.ogg"></audio>
+      <audio id="sfx-chips" data-start="3.7" data-duration="0.11" data-track-index="2" data-volume="0.7" src="assets/sfx/interface/drop_001.ogg"></audio>
+      <audio id="sfx-k1" data-start="8.1" data-duration="0.25" data-track-index="3" data-volume="0.6" src="assets/sfx/keyboard/keypress-003.wav"></audio>
+      <audio id="sfx-k2" data-start="8.28" data-duration="0.25" data-track-index="4" data-volume="0.6" src="assets/sfx/keyboard/keypress-007.wav"></audio>
+      <audio id="sfx-k3" data-start="8.46" data-duration="0.25" data-track-index="3" data-volume="0.6" src="assets/sfx/keyboard/keypress-012.wav"></audio>
+      <audio id="sfx-k4" data-start="8.64" data-duration="0.25" data-track-index="4" data-volume="0.6" src="assets/sfx/keyboard/keypress-019.wav"></audio>
+      <audio id="sfx-k5" data-start="8.82" data-duration="0.25" data-track-index="3" data-volume="0.6" src="assets/sfx/keyboard/keypress-024.wav"></audio>
+      <audio id="sfx-strike" data-start="8.96" data-duration="0.5" data-track-index="2" data-volume="0.5" src="assets/sfx/interface/error_005.ogg"></audio>
+      <audio id="sfx-c1" data-start="12.65" data-duration="0.6" data-track-index="2" data-volume="0.6" src="assets/sfx/casino/card-slide-1.ogg"></audio>
+      <audio id="sfx-c2" data-start="13.7" data-duration="0.6" data-track-index="2" data-volume="0.6" src="assets/sfx/casino/card-slide-1.ogg"></audio>
+      <audio id="sfx-c3" data-start="14.76" data-duration="0.6" data-track-index="2" data-volume="0.6" src="assets/sfx/casino/card-slide-1.ogg"></audio>
+      <audio id="sfx-kcal" data-start="17.91" data-duration="0.15" data-track-index="2" data-volume="0.8" src="assets/sfx/impact/impactSoft_medium_004.ogg"></audio>
+      <audio id="sfx-bell" data-start="20.02" data-duration="1.48" data-track-index="2" data-volume="0.6" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelectorAll(s);
+
+      // counter helper: tweens a number into an element's text (seek-safe)
+      function countUp(el, to, at, dur, fmt) {
+        const o = { v: 0 };
+        tl.fromTo(o, { v: 0 }, {
+          v: to, duration: dur, ease: "power2.out",
+          onUpdate: () => { el.textContent = fmt ? fmt(Math.round(o.v)) : Math.round(o.v); },
+        }, at);
+      }
+
+      // 1. Hook
+      tl.fromTo("#s1img", { scale: 1.18 }, { scale: 1.02, duration: 3.2, ease: "none" }, 0);
+      tl.fromTo("#s1 .l1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0.2);
+      tl.fromTo("#s1 .l2", { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", transformOrigin: "left center" }, 1.6); // beat-locked: 1.60s
+
+      // 2. Vision: chips pop quickly, then hold as a set
+      tl.fromTo("#s2 .photo", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 3.2);
+      tl.fromTo("#s2 .agent-tag", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4 }, 3.25);
+      tl.fromTo("#s2 .chip", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2.2)", stagger: 0.16 }, 3.7);
+      tl.fromTo("#s2 .caption", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 5.1);
+
+      // 3. Nutritionist: type "vegan", strike, drop the non-vegan items
+      tl.fromTo("#s3 .agent-tag", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4 }, 7.6);
+      tl.fromTo("#s3 .field", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4 }, 7.65);
+      tl.fromTo("#s3 .list", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 7.7);
+      tl.set("#s3 .t", { opacity: 0 }, 7.6);
+      [8.1, 8.28, 8.46, 8.64, 8.82].forEach((t, i) => tl.set(q("#s3 .t")[i], { opacity: 1 }, t));
+      tl.fromTo("#s3 .strike", { scaleX: 0 }, { scaleX: 1, duration: 0.22, ease: "power2.out", stagger: 0.06 }, 8.96); // beat-locked: 8.96s
+      tl.to("#s3 .chip.out", { opacity: 0.35, scale: 0.92, duration: 0.4, ease: "power2.out", stagger: 0.06 }, 9.3);
+      tl.fromTo("#s3 .sorry", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.4, ease: "back.out(1.8)" }, 9.5);
+
+      // 4. Recipes: cards on every other beat, kcal counts up
+      tl.fromTo("#s4 .agent-tag, #s4 .mode", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4 }, 11.8);
+      [12.65, 13.7, 14.76].forEach((t, i) => { // beat-grid: cards at 12.65 / 13.70 / 14.76
+        const card = q("#s4 .card")[i];
+        tl.fromTo(card, { opacity: 0, y: 120, rotation: -3 }, { opacity: 1, y: 0, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, t);
+        const n = card.querySelector(".n");
+        countUp(n, +n.dataset.to, t + 0.2, 0.7);
+      });
+
+      // 5. Analysis: count to 1,100 landing on the strong cue
+      tl.fromTo("#s5 .photo", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power3.out" }, 16.2);
+      tl.fromTo("#s5 .agent-tag, #s5 .mode, #s5 .dish", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.08 }, 16.25);
+      countUp(document.getElementById("cal"), 1100, 16.8, 1.1, (v) => v.toLocaleString("en-US")); // beat-locked: lands 17.90s
+      tl.fromTo("#s5 .big", { scale: 1 }, { scale: 1.06, duration: 0.12, yoyo: true, repeat: 1, transformOrigin: "left center" }, 17.9);
+      tl.fromTo("#s5 .macros div", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.1 }, 18.0);
+      tl.fromTo("#s5 .verdict", { opacity: 0 }, { opacity: 1, duration: 0.35 }, 18.35);
+
+      // 6. Outro
+      tl.fromTo("#s6 .mark", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 20.02); // beat-locked: 20.02s
+      tl.fromTo("#s6 .tag", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, 20.5);
+      tl.fromTo("#s6 .stack", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 21.0);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
